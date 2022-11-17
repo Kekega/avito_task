@@ -16,14 +16,12 @@ type Request interface {
 // GetBalanceRequest represents a request to get balance of specific user.
 type GetBalanceRequest struct {
 	OwnerId  string `json:"owner_id"`
-	Currency string `json:"currency,omitempty"`
 }
 
 // Validate validates the GetBalanceRequest fields.
 func (r GetBalanceRequest) Validate() error {
 	return validation.ValidateStruct(&r,
 		validation.Field(&r.OwnerId, validation.Required, is.UUID, notNilUuidRule),
-		validation.Field(&r.Currency, is.CurrencyCode),
 	)
 }
 

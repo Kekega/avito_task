@@ -76,14 +76,6 @@ func (s service) GetBalance(ctx context.Context, req requests.GetBalanceRequest)
 	}
 	balance := float32(deposit.Balance)
 
-	if req.Currency != "" {
-		rate, err := s.exchangeService.Get(req.Currency)
-		if err != nil {
-			return 0, errors.InternalServerError("Requested currency is not available at the moment.")
-		}
-		return balance * rate, nil
-	}
-
 	return balance, nil
 }
 
