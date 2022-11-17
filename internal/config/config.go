@@ -6,8 +6,7 @@ import (
 	"time"
 
 	"github.com/qiangxue/go-env"
-	"gopkg.in/yaml.v2"
-	"users-balance-microservice/pkg/log"
+	"avito_task/pkg/log"
 )
 
 const defaultServerPort = 8080
