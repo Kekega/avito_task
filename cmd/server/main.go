@@ -2,10 +2,14 @@ package main
 
 import (
 	"avito_task/handlers"
+	"flag"
 	"log"
 	"net/http"
 	"os"
 )
+
+var Version = "1.0.0"
+var flagConfig = flag.String("config", "./config/dev.yml", "path to the config file")
 
 func main() {
 	l := log.New(os.Stdout, "product-api", log.LstdFlags)
