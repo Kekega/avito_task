@@ -1,32 +1,116 @@
 package main
 
 import (
-	"avito_task/handlers"
+	"context"
+	"database/sql"
 	"flag"
-	"log"
+	"fmt"
 	"net/http"
 	"os"
+	"time"
+
+	"github.com/go-ozzo/ozzo-dbx"
+	"github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/go-ozzo/ozzo-routing/v2/content"
+	"github.com/go-ozzo/ozzo-routing/v2/cors"
+	_ "github.com/lib/pq"
+	"avito_task/internal/config"
+	"avito_task/internal/deposit"
+	"avito_task/internal/errors"
+	"avito_task/internal/rates"
+	"avito_task/internal/transaction"
+	"avito_task/pkg/accesslog"
+	"avito_task/pkg/dbcontext"
+	"avito_task/pkg/log"
 )
 
 var Version = "1.0.0"
 var flagConfig = flag.String("config", "./config/dev.yml", "path to the config file")
 
 func main() {
-	l := log.New(os.Stdout, "product-api", log.LstdFlags)
-	ah := handlers.NewAddMoney(l)
+	flag.Parse()
+	// create root logger tagged with server version
+	logger := log.New().With(nil, "version", Version)
 
-	sm := http.NewServeMux()
-	sm.Handle("/", ah)
+	// load application configurations
+	cfg, err := config.Load(*flagConfig, logger)
+	if err != nil {
+		logger.Errorf("failed to load application configuration: %s", err)
+		os.Exit(-1)
+	}
 
+	// connect to the database
+	db, err := dbx.MustOpen("postgres", cfg.DSN)
+	if err != nil {
+		logger.Error(err)
+		os.Exit(-1)
+	}
+	db.QueryLogFunc = logDBQuery(logger)
+	db.ExecLogFunc = logDBExec(logger)
+	defer func() {
+		if err := db.Close(); err != nil {
+			logger.Error(err)
+		}
+	}()
 
+	// build HTTP server
+	address := fmt.Sprintf(":%v", cfg.ServerPort)
+	hs := &http.Server{
+		Addr:    address,
+		Handler: buildHandler(logger, dbcontext.New(db), cfg),
+	}
 
-	//http.HandleFunc("/reserve_money/{user_id}/{service_id}/{order_id}/{sum}", func(rw http.ResponseWriter, r*http.Request) {
-	//	fmt.Print("2")
-	//})
+	// start the HTTP server with graceful shutdown
+	go routing.GracefulShutdown(hs, 10*time.Second, logger.Infof)
+	logger.Infof("server %v is running at %v", Version, address)
+	if err := hs.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		logger.Error(err)
+		os.Exit(-1)
+	}
+}
 
-	//http.HandleFunc()
+// buildHandler sets up the HTTP routing and builds an HTTP handler.
+func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.Handler {
+	router := routing.New()
 
-	//http.HandleFunc()
+	router.Use(
+		accesslog.Handler(logger),
+		errors.Handler(logger),
+		content.TypeNegotiator(content.JSON),
+		cors.Handler(cors.AllowAll),
+	)
 
-	http.ListenAndServe("127.0.0.1:9090", sm)
+	rg := router.Group("/v1")
+
+	deposit.RegisterHandlers(
+		rg.Group(""),
+		deposit.NewService(deposit.NewRepository(db, logger), rates.NewService(cfg.RatesExpiration, logger), logger),
+		transaction.NewService(transaction.NewRepository(db, logger), logger),
+		logger,
+		db.TransactionHandler(),
+	)
+
+	return router
+}
+
+// logDBQuery returns a logging function that can be used to log SQL queries.
+func logDBQuery(logger log.Logger) dbx.QueryLogFunc {
+	return func(ctx context.Context, t time.Duration, sql string, rows *sql.Rows, err error) {
+		if err == nil {
+			logger.With(ctx, "duration", t.Milliseconds(), "sql", sql).Info("DB query successful")
+		} else {
+			logger.With(ctx, "sql", sql).Errorf("DB query error: %v", err)
+		}
+	}
+}
+
+// logDBExec returns a logging function that can be used to log SQL executions.
+func logDBExec(logger log.Logger) dbx.ExecLogFunc {
+	return func(ctx context.Context, t time.Duration, sql string, result sql.Result, err error) {
+		if err == nil {
+			logger.With(ctx, "duration", t.Milliseconds(), "sql", sql).Info("DB execution successful")
+		} else {
+			logger.With(ctx, "sql", sql).Errorf("DB execution error: %v", err)
+		}
+	}
 }
