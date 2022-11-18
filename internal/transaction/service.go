@@ -8,7 +8,6 @@ import (
 	"avito_task/internal/entity"
 	"avito_task/internal/requests"
 	"avito_task/pkg/log"
-	"github.com/google/uuid"
 )
 
 // Service encapsulates usecase logic for transactions.
@@ -77,7 +76,7 @@ func (s service) CreateTransferTransaction(ctx context.Context, req requests.Res
 	}
 
 	tx := entity.Transaction{
-		Id:              0, // will be auto-incremented
+		Id:              0, // auto-incremented
 		OwnerId:        senderId,
 		ServiceId:     recipientId,
 		Amount:          req.Amount,
@@ -102,7 +101,10 @@ func (s service) GetHistory(ctx context.Context, req requests.GetHistoryRequest)
 		req.Limit = -1
 	}
 
-	ownerUUID := uuid.MustParse(req.OwnerId)
+	ownerUUID, err := strconv.ParseInt(req.OwnerId, 10, 64)
+	if err != nil {
+		return nil, err
+	}
 
 	return s.repo.GetForUser(ctx, ownerUUID, req.OrderBy, req.OrderDirection, req.Offset, req.Limit)
 }

@@ -17,7 +17,7 @@ type Repository interface {
 	Create(ctx context.Context, tx *entity.Transaction) error
 	Count(ctx context.Context) (int64, error)
 	// GetForUser returns a list of all transactions related to given userId.
-	GetForUser(ctx context.Context, ownerId uuid.UUID, orderBy, orderDirection string, offset, limit int) ([]entity.Transaction, error)
+	GetForUser(ctx context.Context, ownerId int64, orderBy, orderDirection string, offset, limit int) ([]entity.Transaction, error)
 }
 
 // repository persists Transaction in database
