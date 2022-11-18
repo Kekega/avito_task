@@ -1,13 +1,11 @@
 package transaction
 
 import (
-	"context"
-
-	dbx "github.com/go-ozzo/ozzo-dbx"
-	"github.com/google/uuid"
 	"avito_task/internal/entity"
 	"avito_task/pkg/dbcontext"
 	"avito_task/pkg/log"
+	"context"
+	dbx "github.com/go-ozzo/ozzo-dbx"
 )
 
 // Repository encapsulates the logic to access transactions from the database.
@@ -44,7 +42,7 @@ func (r repository) Count(ctx context.Context) (int64, error) {
 }
 
 // GetForUser returns all transactions from and to the user with given id.
-func (r repository) GetForUser(ctx context.Context, ownerId uuid.UUID, orderBy, orderDirection string, offset, limit int) ([]entity.Transaction, error) {
+func (r repository) GetForUser(ctx context.Context, ownerId int64, orderBy, orderDirection string, offset, limit int) ([]entity.Transaction, error) {
 	var result []entity.Transaction
 	query := r.db.With(ctx).Select().
 		Where(dbx.Or(dbx.HashExp{"sender_id": ownerId}, dbx.HashExp{"recipient_id": ownerId})).

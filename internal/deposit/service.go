@@ -1,23 +1,20 @@
 package deposit
 
 import (
-	"context"
-	"database/sql"
-	"strconv"
-
-	"github.com/google/uuid"
 	"avito_task/internal/entity"
 	"avito_task/internal/errors"
 	"avito_task/internal/requests"
 	"avito_task/pkg/log"
+	"context"
+	"database/sql"
 )
 
 // Service encapsulates usecase logic for deposits.
 type Service interface {
 	GetBalance(ctx context.Context, req requests.GetBalanceRequest) (float32, error)
 	Update(ctx context.Context, req requests.AddFundsRequest) error
-	Transfer(ctx context.Context, req requests.ReserveRequest) error
-	Count(ctx context.Context) (int64, error)
+	//Transfer(ctx context.Context, req requests.ReserveRequest) error
+	//Count(ctx context.Context) (int64, error)
 }
 
 // Deposit represents the data about a deposit.
@@ -67,12 +64,12 @@ func (s service) GetBalance(ctx context.Context, req requests.GetBalanceRequest)
 		return 0, err
 	}
 
-	ownerId, err := strconv.ParseInt(req.OwnerId, 10, 64)
-	if err != nil {
-		return 0, err
-	}
+	//ownerId, err := strconv.ParseInt(req.OwnerId, 10, 64)
+	//if err != nil {
+	//	return 0, err
+	//}
 
-	deposit, err := s.repo.Get(ctx, ownerId)
+	deposit, err := s.repo.Get(ctx, req.OwnerId)
 	if err == sql.ErrNoRows {
 		return 0, nil
 	} else if err != nil {
@@ -98,26 +95,26 @@ func (s service) Update(ctx context.Context, req requests.AddFundsRequest) error
 	return nil
 }
 
-// Transfer sends money from one user to another according to ReserveRequest.
-// It returns a Transaction which reflects the corresponding money transfer in case of success.
-func (s service) Transfer(ctx context.Context, req requests.ReserveRequest) error {
-	if err := req.Validate(); err != nil {
-		return err
-	}
-
-	senderUUID, recipientUUID := uuid.MustParse(req.SenderId), uuid.MustParse(req.ServiceId)
-	if err := s.modifyBalance(ctx, senderUUID, -req.Amount); err != nil {
-		return err
-	}
-	if err := s.modifyBalance(ctx, recipientUUID, req.Amount); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// Count returns a number of Deposits in the database.
-// Mainly used for testing purposes.
-func (s service) Count(ctx context.Context) (int64, error) {
-	return s.repo.Count(ctx)
-}
+//// Transfer sends money from one user to another according to ReserveRequest.
+//// It returns a Transaction which reflects the corresponding money transfer in case of success.
+//func (s service) Transfer(ctx context.Context, req requests.ReserveRequest) error {
+//	if err := req.Validate(); err != nil {
+//		return err
+//	}
+//
+//	senderUUID, recipientUUID := uuid.MustParse(req.SenderId), uuid.MustParse(req.ServiceId)
+//	if err := s.modifyBalance(ctx, senderUUID, -req.Amount); err != nil {
+//		return err
+//	}
+//	if err := s.modifyBalance(ctx, recipientUUID, req.Amount); err != nil {
+//		return err
+//	}
+//
+//	return nil
+//}
+//
+//// Count returns a number of Deposits in the database.
+//// Mainly used for testing purposes.
+//func (s service) Count(ctx context.Context) (int64, error) {
+//	return s.repo.Count(ctx)
+//}

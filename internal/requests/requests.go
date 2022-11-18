@@ -12,7 +12,7 @@ type Request interface {
 
 // GetBalanceRequest represents a request to get balance of specific user.
 type GetBalanceRequest struct {
-	OwnerId string `json:"owner_id"`
+	OwnerId int64 `json:"owner_id"`
 }
 
 // Validate validates the GetBalanceRequest fields.

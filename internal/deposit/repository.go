@@ -17,7 +17,7 @@ type Repository interface {
 	// Update updates the changes to the given Deposit to db.
 	Update(ctx context.Context, deposit entity.Deposit) error
 	// Count returns the number of Deposit records in the database.
-	Count(ctx context.Context) (int64, error)
+	//Count(ctx context.Context) (int64, error)
 }
 
 // repository persists Deposit in database

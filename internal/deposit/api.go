@@ -19,9 +19,9 @@ func RegisterHandlers(
 	res := resource{depositService, transactionService, logger}
 
 	r.Post("/deposits/balance", res.getBalance)
-	r.Post("/deposits/update", transactionHandler, res.updateBalance)
+	r.Post("/deposits/update", transactionHandler, res.AddFunds)
 	r.Post("/deposits/transfer", transactionHandler, res.transfer)
-	r.Post("/deposits/history", res.history)
+	//r.Post("/deposits/history", res.history)
 }
 
 type resource struct {
@@ -44,7 +44,7 @@ func (r resource) getBalance(c *routing.Context) error {
 	return c.Write(balance)
 }
 
-func (r resource) updateBalance(c *routing.Context) error {
+func (r resource) AddFunds(c *routing.Context) error {
 	var input requests.AddFundsRequest
 	if err := c.Read(&input); err != nil {
 		r.logger.With(c.Request.Context()).Info(err)
