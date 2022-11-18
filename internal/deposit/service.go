@@ -39,7 +39,7 @@ func NewService(depositRepo Repository, logger log.Logger) Service {
 	return service{depositRepo, logger}
 }
 
-func (s service) modifyBalance(ctx context.Context, ownerId uuid.UUID, amount int64) error {
+func (s service) modifyBalance(ctx context.Context, ownerId int64, amount int64) error {
 	dep, err := s.repo.Get(ctx, ownerId)
 
 	// If deposit is not in DB yet, create it.
@@ -84,8 +84,8 @@ func (s service) Update(ctx context.Context, req requests.AddFundsRequest) error
 		return err
 	}
 
-	ownerUUID := uuid.MustParse(req.OwnerId)
-	if err := s.modifyBalance(ctx, ownerUUID, req.Amount); err != nil {
+	ownerId := req.OwnerId
+	if err := s.modifyBalance(ctx, ownerId, req.Amount); err != nil {
 		return err
 	}
 

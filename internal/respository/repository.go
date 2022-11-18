@@ -2,6 +2,8 @@ package respository
 
 import (
 	"avito_task/internal/entity"
+	"runtime"
+
 	//"avito_task/internal/requests"
 	"avito_task/pkg/dbcontext"
 	"avito_task/pkg/log"
@@ -30,6 +32,7 @@ func NewRepository(db *dbcontext.DB, logger log.Logger) Repository {
 func (r repository) AddFunds(ctx context.Context, ownerId int64, amount int64) error {
 	// обратиться к бд c запросом на добавление
 	// средств по ownerId на amount
+
 }
 
 func (r repository) ReserveFunds(ctx context.Context, ownerId, serviceId, orderId, amount int64) error {

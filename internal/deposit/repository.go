@@ -12,7 +12,7 @@ import (
 // Repository encapsulates the logic to access deposits from the database.
 type Repository interface {
 	// Get returns the Deposit with the specified owner's UUID.
-	Get(ctx context.Context, ownerId uuid.UUID) (entity.Deposit, error)
+	Get(ctx context.Context, ownerId int64) (entity.Deposit, error)
 	// Create saves a new Deposit in the storage.
 	Create(ctx context.Context, deposit entity.Deposit) error
 	// Update updates the changes to the given Deposit to db.

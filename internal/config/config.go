@@ -15,8 +15,6 @@ const defaultServerPort = 8080
 type Config struct {
 	// the server port. Defaults to 8080.
 	ServerPort int `yaml:"server_port" env:"SERVER_PORT"`
-	// the expiration time of currency rates. Defaults to 10 minutes.
-	RatesExpiration time.Duration `yaml:"rates_expiration"`
 	// the data source name (DSN) for connecting to the database. Required.
 	DSN string `yaml:"dsn"`
 }
@@ -26,7 +24,6 @@ func Load(file string, logger log.Logger) (*Config, error) {
 	// default config
 	c := Config{
 		ServerPort:      defaultServerPort,
-		RatesExpiration: 10 * time.Minute,
 	}
 
 	// load from YAML config file
