@@ -4,8 +4,6 @@ import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 )
 
-var notNilUuidRule = validation.NotIn("00000000-0000-0000-0000-000000000000").Error("value cannot be Nil UUID.")
-
 // Request represents a JSON data of an API request.
 type Request interface {
 	// Validate validates the request's fields.

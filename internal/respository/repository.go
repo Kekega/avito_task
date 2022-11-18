@@ -53,6 +53,26 @@ func (r repository) GetBalance(ctx context.Context, ownerId int64) (balance int6
 	// взять ownerId из бд, вернуть результат
 }
 
+
+// Get reads the Deposit with the specified OwnerId from the database.
+// If Deposit with specified OwnerId does not exist, it is created with balance=0.
+func (r repository) Get(ctx context.Context, ownerId int64) (entity.Deposit, error) {
+	var deposit entity.Deposit
+	err := r.db.With(ctx).Select().Model(ownerId, &deposit)
+	return deposit, err
+}
+
+// Create saves a new Deposit record in the database.
+func (r repository) Create(ctx context.Context, deposit entity.Deposit) error {
+	return r.db.With(ctx).Model(&deposit).Insert()
+}
+
+// Update saves the changes to the Deposit in the database.
+func (r repository) Update(ctx context.Context, deposit entity.Deposit) error {
+	return r.db.With(ctx).Model(&deposit).Update()
+}
+
+
 //func (r repository) GetHistory(ctx context.Context, req requests.GetHistoryRequest) ([]entity.Transaction, error) {
 //	if err := req.Validate(); err != nil {
 //		return nil, err
