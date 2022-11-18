@@ -23,7 +23,7 @@ docker-compose up
 - Пополнить баланс пользователя
   :`POST /v1/deposits/update`
 
-Коллекция запросов для запуска в Postman находится в файле [postman_examples.json]().
+Коллекция запросов для запуска в Postman находится в файле [postman_collection.json](https://github.com/Kekega/avito_task/blob/master/postman_collection.json).
 
 ## Детали реализации
 
