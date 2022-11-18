@@ -27,4 +27,6 @@ type Transaction struct {
 	Description string `json:"description"`
 	// The date and time when this Transaction was made.
 	TransactionDate time.Time `json:"transaction_date,omitempty"`
+	// Transaction status: completed, pending or canceled.
+	//Status string `json:"status"`
 }
