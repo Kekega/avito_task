@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "cc33e2c7-4b81-411a-ba92-fbfc539a73c0",
+		"name": "users-balance-microservice Copy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24490489"
+	},
+	"item": [
+		{
+			"name": "Пополнение баланса",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner_id\": 80242130001,\r\n    \"amount\": 5000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/update",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка баланса",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner_id\": 80242130001\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/balance",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Резервирование средств",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sender_id\": 80242130001,\r\n    \"service_id\": 80242130002,\r\n    \"order_id\": 80242130003,\r\n    \"amount\" : 300\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/transfer",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"transfer"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Признание выручки",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sender_id\": 80242130001,\r\n    \"service_id\": 80242130002,\r\n    \"order_id\": 80242130003,\r\n    \"amount\" : 300\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/update",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Отказ в списании - недостаточно средств",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"sender_id\": 80242130001,\r\n    \"service_id\": 80242130002,\r\n    \"order_id\": 80242130003,\r\n    \"amount\" : 999999\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/update",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Проверка баланса 2",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner_id\": 80242130001\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/history",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"history"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "История операций",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"owner_id\": 80242130001,\r\n    \"offset\": 0,\r\n    \"limit\": 5,\r\n    \"order_by\": \"amount\",\r\n    \"order_direction\": \"DESC\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": ":8080/v1/deposits/history",
+					"port": "8080",
+					"path": [
+						"v1",
+						"deposits",
+						"history"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
