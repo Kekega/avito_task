@@ -2,18 +2,19 @@ package transaction
 
 import (
 	"context"
+	"strconv"
 	"time"
 
-	"github.com/google/uuid"
 	"avito_task/internal/entity"
 	"avito_task/internal/requests"
 	"avito_task/pkg/log"
+	"github.com/google/uuid"
 )
 
 // Service encapsulates usecase logic for transactions.
 type Service interface {
-	// CreateUpdateTransaction creates a Transaction based on UpdateBalanceRequest.
-	CreateUpdateTransaction(ctx context.Context, req requests.UpdateBalanceRequest) (Transaction, error)
+	// CreateUpdateTransaction creates a Transaction based on AddFundsRequest.
+	CreateUpdateTransaction(ctx context.Context, req requests.AddFundsRequest) (Transaction, error)
 	// CreateTransferTransaction creates a Transaction based on TransferRequest.
 	CreateTransferTransaction(ctx context.Context, req requests.TransferRequest) (Transaction, error)
 	// GetHistory returns a list of all transactions related to the user with the given ID.
@@ -37,21 +38,21 @@ func NewService(repo Repository, logger log.Logger) Service {
 	return service{repo, logger}
 }
 
-func (s service) CreateUpdateTransaction(ctx context.Context, req requests.UpdateBalanceRequest) (Transaction, error) {
+func (s service) CreateUpdateTransaction(ctx context.Context, req requests.AddFundsRequest) (Transaction, error) {
 	if err := req.Validate(); err != nil {
 		return Transaction{}, err
 	}
 
-	ownerUUID := uuid.MustParse(req.OwnerId)
+	ownerId := req.OwnerId
 	tx := entity.Transaction{
-		Description:     req.Description,
+		ServiceId:       req.ServiceId,
 		TransactionDate: time.Now().UTC(),
 	}
 	if req.Amount < 0 {
-		tx.SenderId = ownerUUID
+		tx.OwnerId = ownerId
 		tx.Amount = -req.Amount
 	} else {
-		tx.RecipientId = ownerUUID
+		tx.OwnerId = ownerId
 		tx.Amount = req.Amount
 	}
 
@@ -67,17 +68,25 @@ func (s service) CreateTransferTransaction(ctx context.Context, req requests.Tra
 		return Transaction{}, err
 	}
 
-	senderUUID, recipientUUID := uuid.MustParse(req.SenderId), uuid.MustParse(req.RecipientId)
+	senderId, err := strconv.ParseInt(req.SenderId, 10, 64)
+	if err != nil {
+		return Transaction{}, err
+	}
+	recipientId, err := strconv.ParseInt(req.RecipientId, 10, 64)
+	if err != nil {
+		return Transaction{}, err
+	}
+
 	tx := entity.Transaction{
 		Id:              0, // will be auto-incremented
-		SenderId:        senderUUID,
-		RecipientId:     recipientUUID,
+		OwnerId:        senderId,
+		ServiceId:     recipientId,
 		Amount:          req.Amount,
-		Description:     req.Description,
+		OrderId:     req.OrderId,
 		TransactionDate: time.Now().UTC(),
 	}
 
-	err := s.repo.Create(ctx, &tx)
+	err = s.repo.Create(ctx, &tx)
 	if err != nil {
 		return Transaction{}, err
 	}

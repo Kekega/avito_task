@@ -14,7 +14,7 @@ import (
 // Service encapsulates usecase logic for deposits.
 type Service interface {
 	GetBalance(ctx context.Context, req requests.GetBalanceRequest) (float32, error)
-	Update(ctx context.Context, req requests.UpdateBalanceRequest) error
+	Update(ctx context.Context, req requests.AddFundsRequest) error
 	Transfer(ctx context.Context, req requests.TransferRequest) error
 	Count(ctx context.Context) (int64, error)
 }
@@ -77,9 +77,9 @@ func (s service) GetBalance(ctx context.Context, req requests.GetBalanceRequest)
 	return balance, nil
 }
 
-// Update changes the balance of Deposit according to UpdateBalanceRequest.
+// Update changes the balance of Deposit according to AddFundsRequest.
 // It returns the Transaction which reflects the corresponding balance change in case of success.
-func (s service) Update(ctx context.Context, req requests.UpdateBalanceRequest) error {
+func (s service) Update(ctx context.Context, req requests.AddFundsRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
 	}

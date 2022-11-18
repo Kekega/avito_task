@@ -15,7 +15,7 @@ type Request interface {
 
 // GetBalanceRequest represents a request to get balance of specific user.
 type GetBalanceRequest struct {
-	OwnerId  string `json:"owner_id"`
+	OwnerId string `json:"owner_id"`
 }
 
 // Validate validates the GetBalanceRequest fields.
@@ -25,18 +25,19 @@ func (r GetBalanceRequest) Validate() error {
 	)
 }
 
-// UpdateBalanceRequest represents a request to update user's balance.
-type UpdateBalanceRequest struct {
-	OwnerId     string `json:"owner_id"`
-	Amount      int64  `json:"amount"`
-	Description string `json:"description,omitempty"`
+// AddFundsRequest represents a request to add money to user's balance.
+type AddFundsRequest struct {
+	OwnerId int64 `json:"owner_id"`
+
+	Amount    int64 `json:"amount"`
+	ServiceId int64 `json:"service_id"`
 }
 
-func (r UpdateBalanceRequest) Validate() error {
+func (r AddFundsRequest) Validate() error {
 	return validation.ValidateStruct(&r,
-		validation.Field(&r.OwnerId, validation.Required, is.UUID, notNilUuidRule),
+		validation.Field(&r.OwnerId, validation.Required),
 		validation.Field(&r.Amount, validation.Required),
-		validation.Field(&r.Description, validation.Length(0, 100)),
+		validation.Field(&r.ServiceId, validation.Required),
 	)
 }
 
@@ -45,16 +46,16 @@ type TransferRequest struct {
 	SenderId    string `json:"sender_id"`
 	RecipientId string `json:"recipient_id"`
 	Amount      int64  `json:"amount"`
-	Description string `json:"description"`
+	OrderId     int64 `json:"order_id"`
 }
 
 // Validate validates the TransferRequest fields.
 func (r TransferRequest) Validate() error {
 	return validation.ValidateStruct(&r,
-		validation.Field(&r.SenderId, validation.Required, is.UUID, notNilUuidRule),
-		validation.Field(&r.RecipientId, validation.Required, is.UUID, notNilUuidRule),
+		validation.Field(&r.SenderId, validation.Required),
+		validation.Field(&r.RecipientId, validation.Required),
 		validation.Field(&r.Amount, validation.Required, validation.Min(0).Exclusive()),
-		validation.Field(&r.Description, validation.Length(0, 100)),
+		validation.Field(&r.OrderId, validation.Required),
 	)
 }
 
