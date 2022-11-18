@@ -18,16 +18,10 @@ docker-compose up
 
 ## Описание API
 
-Детальное описание каждого endpoint'а с примерами открывается по клику:
-
-- [Получить баланс пользователя](https://github.com/alien-agent/users-balance-microservice/blob/master/docs/balance.md)
+- Получить баланс пользователя
   :`POST /v1/deposits/balance`
-- [Изменить баланс пользователя](https://github.com/alien-agent/users-balance-microservice/blob/master/docs/update.md)
+- Пополнить баланс пользователя
   :`POST /v1/deposits/update`
-- [Перевести деньги между двумя пользователями](https://github.com/alien-agent/users-balance-microservice/blob/master/docs/transfer.md)
-  :`POST /v1/deposits/transfer`
-- [Получить историю операций пользователя](https://github.com/alien-agent/users-balance-microservice/blob/master/docs/history.md)
-  :`POST /v1/deposits/history`
 
 Коллекция запросов для запуска в Postman находится в файле [postman_examples.json]().
 
@@ -68,7 +62,7 @@ docker-compose up
 Поэтому (при условии прохождения валидации запроса) сервер сообщает о нулевом балансе если нужный счет не найден в БД.
 
 ### Способ резервирования средств на счете
-Для простоты реализации моего проекта, я решил, что будет допустимо организовать заморозку средств на счете в виде `pending` запроса.
+Для простоты реализации моего проекта, я решил, что будет допустимо организовать резервирование средств на счете в виде `pending` запроса.
 В случае заморозки средств создается запрос с параметром `pending = true`, после признания выручки его значение меняется на `false`.
 Если необходимо отменить резервирование средств, то на счет пользователя зачисляется сумма запроса, а сам запрос удаляется из таблицы зпросов.
 
