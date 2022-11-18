@@ -3,7 +3,6 @@ package deposit
 import (
 	"context"
 
-	"github.com/google/uuid"
 	"avito_task/internal/entity"
 	"avito_task/pkg/dbcontext"
 	"avito_task/pkg/log"
@@ -34,7 +33,7 @@ func NewRepository(db *dbcontext.DB, logger log.Logger) Repository {
 
 // Get reads the Deposit with the specified OwnerId from the database.
 // If Deposit with specified OwnerId does not exist, it is created with balance=0.
-func (r repository) Get(ctx context.Context, ownerId uuid.UUID) (entity.Deposit, error) {
+func (r repository) Get(ctx context.Context, ownerId int64) (entity.Deposit, error) {
 	var deposit entity.Deposit
 	err := r.db.With(ctx).Select().Model(ownerId, &deposit)
 	return deposit, err

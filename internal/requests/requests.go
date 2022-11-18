@@ -37,23 +37,41 @@ func (r AddFundsRequest) Validate() error {
 	)
 }
 
-// TransferRequest represents a request to transfer money from one user to another.
-type TransferRequest struct {
-	SenderId    string `json:"sender_id"`
-	RecipientId string `json:"recipient_id"`
-	Amount      int64  `json:"amount"`
-	OrderId     int64  `json:"order_id"`
+// ReserveRequest represents a request to transfer money from one user to another.
+type ReserveRequest struct {
+	SenderId  string `json:"sender_id"`
+	ServiceId string `json:"service_id"`
+	Amount    int64  `json:"amount"`
+	OrderId   int64  `json:"order_id"`
 }
 
-// Validate validates the TransferRequest fields.
-func (r TransferRequest) Validate() error {
+// Validate validates the ReserveRequest fields.
+func (r ReserveRequest) Validate() error {
 	return validation.ValidateStruct(&r,
 		validation.Field(&r.SenderId, validation.Required),
-		validation.Field(&r.RecipientId, validation.Required),
+		validation.Field(&r.ServiceId, validation.Required),
 		validation.Field(&r.Amount, validation.Required, validation.Min(0).Exclusive()),
 		validation.Field(&r.OrderId, validation.Required),
 	)
 }
+
+
+type ApplyReserveRequest struct {
+	SenderId  string `json:"sender_id"`
+	ServiceId string `json:"service_id"`
+	Amount    int64  `json:"amount"`
+	OrderId   int64  `json:"order_id"`
+}
+
+func (r ApplyReserveRequest) Validate() error {
+	return validation.ValidateStruct(&r,
+		validation.Field(&r.SenderId, validation.Required),
+		validation.Field(&r.ServiceId, validation.Required),
+		validation.Field(&r.Amount, validation.Required, validation.Min(0).Exclusive()),
+		validation.Field(&r.OrderId, validation.Required),
+	)
+}
+
 
 // GetHistoryRequest represents a request to get a list of all user's transactions: top-ups, withdrawals and transfers.
 type GetHistoryRequest struct {

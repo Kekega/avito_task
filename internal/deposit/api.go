@@ -63,7 +63,7 @@ func (r resource) updateBalance(c *routing.Context) error {
 }
 
 func (r resource) transfer(c *routing.Context) error {
-	var input requests.TransferRequest
+	var input requests.ReserveRequest
 	if err := c.Read(&input); err != nil {
 		r.logger.With(c.Request.Context()).Info(err)
 		return errors.BadRequest("")

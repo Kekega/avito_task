@@ -50,7 +50,7 @@ func (r repository) ApplyReserve(ctx context.Context, ownerId, serviceId, orderI
 }
 
 func (r repository) GetBalance(ctx context.Context, ownerId int64) (balance int64, err error) {
-	// обратиться к бд, вернуть результат
+	// взять ownerId из бд, вернуть результат
 }
 
 //func (r repository) GetHistory(ctx context.Context, req requests.GetHistoryRequest) ([]entity.Transaction, error) {

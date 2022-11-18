@@ -16,7 +16,7 @@ import (
 type Service interface {
 	GetBalance(ctx context.Context, req requests.GetBalanceRequest) (float32, error)
 	Update(ctx context.Context, req requests.AddFundsRequest) error
-	Transfer(ctx context.Context, req requests.TransferRequest) error
+	Transfer(ctx context.Context, req requests.ReserveRequest) error
 	Count(ctx context.Context) (int64, error)
 }
 
@@ -98,14 +98,14 @@ func (s service) Update(ctx context.Context, req requests.AddFundsRequest) error
 	return nil
 }
 
-// Transfer sends money from one user to another according to TransferRequest.
+// Transfer sends money from one user to another according to ReserveRequest.
 // It returns a Transaction which reflects the corresponding money transfer in case of success.
-func (s service) Transfer(ctx context.Context, req requests.TransferRequest) error {
+func (s service) Transfer(ctx context.Context, req requests.ReserveRequest) error {
 	if err := req.Validate(); err != nil {
 		return err
 	}
 
-	senderUUID, recipientUUID := uuid.MustParse(req.SenderId), uuid.MustParse(req.RecipientId)
+	senderUUID, recipientUUID := uuid.MustParse(req.SenderId), uuid.MustParse(req.ServiceId)
 	if err := s.modifyBalance(ctx, senderUUID, -req.Amount); err != nil {
 		return err
 	}

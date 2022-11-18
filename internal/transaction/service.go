@@ -15,8 +15,8 @@ import (
 type Service interface {
 	// CreateUpdateTransaction creates a Transaction based on AddFundsRequest.
 	CreateUpdateTransaction(ctx context.Context, req requests.AddFundsRequest) (Transaction, error)
-	// CreateTransferTransaction creates a Transaction based on TransferRequest.
-	CreateTransferTransaction(ctx context.Context, req requests.TransferRequest) (Transaction, error)
+	// CreateTransferTransaction creates a Transaction based on ReserveRequest.
+	CreateTransferTransaction(ctx context.Context, req requests.ReserveRequest) (Transaction, error)
 	// GetHistory returns a list of all transactions related to the user with the given ID.
 	GetHistory(ctx context.Context, req requests.GetHistoryRequest) ([]entity.Transaction, error)
 	// Count returns a number of all Transactions in the database. Mainly used for testing purposes.
@@ -45,14 +45,13 @@ func (s service) CreateUpdateTransaction(ctx context.Context, req requests.AddFu
 
 	ownerId := req.OwnerId
 	tx := entity.Transaction{
-		ServiceId:       req.ServiceId,
+		//ServiceId:       req.OwnerId,
 		TransactionDate: time.Now().UTC(),
 	}
+	tx.OwnerId = ownerId
 	if req.Amount < 0 {
-		tx.OwnerId = ownerId
 		tx.Amount = -req.Amount
 	} else {
-		tx.OwnerId = ownerId
 		tx.Amount = req.Amount
 	}
 
@@ -63,7 +62,7 @@ func (s service) CreateUpdateTransaction(ctx context.Context, req requests.AddFu
 	return Transaction{tx}, err
 }
 
-func (s service) CreateTransferTransaction(ctx context.Context, req requests.TransferRequest) (Transaction, error) {
+func (s service) CreateTransferTransaction(ctx context.Context, req requests.ReserveRequest) (Transaction, error) {
 	if err := req.Validate(); err != nil {
 		return Transaction{}, err
 	}
@@ -72,7 +71,7 @@ func (s service) CreateTransferTransaction(ctx context.Context, req requests.Tra
 	if err != nil {
 		return Transaction{}, err
 	}
-	recipientId, err := strconv.ParseInt(req.RecipientId, 10, 64)
+	recipientId, err := strconv.ParseInt(req.ServiceId, 10, 64)
 	if err != nil {
 		return Transaction{}, err
 	}
