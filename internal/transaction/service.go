@@ -51,7 +51,7 @@ func (s service) CreateUpdateTransaction(ctx context.Context, req requests.Updat
 		tx.SenderId = ownerUUID
 		tx.Amount = -req.Amount
 	} else {
-		tx.ServiceId = ownerUUID
+		tx.RecipientId = ownerUUID
 		tx.Amount = req.Amount
 	}
 
@@ -71,7 +71,7 @@ func (s service) CreateTransferTransaction(ctx context.Context, req requests.Tra
 	tx := entity.Transaction{
 		Id:              0, // will be auto-incremented
 		SenderId:        senderUUID,
-		ServiceId:       recipientUUID,
+		RecipientId:     recipientUUID,
 		Amount:          req.Amount,
 		Description:     req.Description,
 		TransactionDate: time.Now().UTC(),

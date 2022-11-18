@@ -7,7 +7,6 @@ import (
 	"github.com/google/uuid"
 	"avito_task/internal/entity"
 	"avito_task/internal/errors"
-	"avito_task/internal/rates"
 	"avito_task/internal/requests"
 	"avito_task/pkg/log"
 )
@@ -32,13 +31,12 @@ type Transaction struct {
 
 type service struct {
 	repo            Repository
-	exchangeService rates.ExchangeRatesService
 	logger          log.Logger
 }
 
 // NewService creates a new Deposit depositService.
-func NewService(depositRepo Repository, exchangeService rates.ExchangeRatesService, logger log.Logger) Service {
-	return service{depositRepo, exchangeService, logger}
+func NewService(depositRepo Repository, logger log.Logger) Service {
+	return service{depositRepo, logger}
 }
 
 func (s service) modifyBalance(ctx context.Context, ownerId uuid.UUID, amount int64) error {

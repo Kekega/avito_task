@@ -17,7 +17,6 @@ import (
 	"avito_task/internal/config"
 	"avito_task/internal/deposit"
 	"avito_task/internal/errors"
-	"avito_task/internal/rates"
 	"avito_task/internal/transaction"
 	"avito_task/pkg/accesslog"
 	"avito_task/pkg/dbcontext"
@@ -84,7 +83,7 @@ func buildHandler(logger log.Logger, db *dbcontext.DB, cfg *config.Config) http.
 
 	deposit.RegisterHandlers(
 		rg.Group(""),
-		deposit.NewService(deposit.NewRepository(db, logger), rates.NewService(cfg.RatesExpiration, logger), logger),
+		deposit.NewService(deposit.NewRepository(db, logger), logger),
 		transaction.NewService(transaction.NewRepository(db, logger), logger),
 		logger,
 		db.TransactionHandler(),
