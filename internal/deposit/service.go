@@ -3,6 +3,7 @@ package deposit
 import (
 	"context"
 	"database/sql"
+	"strconv"
 
 	"github.com/google/uuid"
 	"avito_task/internal/entity"
@@ -66,7 +67,12 @@ func (s service) GetBalance(ctx context.Context, req requests.GetBalanceRequest)
 		return 0, err
 	}
 
-	deposit, err := s.repo.Get(ctx, uuid.MustParse(req.OwnerId))
+	ownerId, err := strconv.ParseInt(req.OwnerId, 10, 64)
+	if err != nil {
+		return 0, err
+	}
+
+	deposit, err := s.repo.Get(ctx, ownerId)
 	if err == sql.ErrNoRows {
 		return 0, nil
 	} else if err != nil {

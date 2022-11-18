@@ -9,11 +9,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/go-ozzo/ozzo-dbx"
-	"github.com/go-ozzo/ozzo-routing/v2"
-	"github.com/go-ozzo/ozzo-routing/v2/content"
-	"github.com/go-ozzo/ozzo-routing/v2/cors"
-	_ "github.com/lib/pq"
 	"avito_task/internal/config"
 	"avito_task/internal/deposit"
 	"avito_task/internal/errors"
@@ -21,6 +16,11 @@ import (
 	"avito_task/pkg/accesslog"
 	"avito_task/pkg/dbcontext"
 	"avito_task/pkg/log"
+	"github.com/go-ozzo/ozzo-dbx"
+	"github.com/go-ozzo/ozzo-routing/v2"
+	"github.com/go-ozzo/ozzo-routing/v2/content"
+	"github.com/go-ozzo/ozzo-routing/v2/cors"
+	_ "github.com/lib/pq"
 )
 
 var Version = "1.0.0"

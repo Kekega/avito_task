@@ -2,7 +2,6 @@ package respository
 
 import (
 	"avito_task/internal/entity"
-	"runtime"
 
 	//"avito_task/internal/requests"
 	"avito_task/pkg/dbcontext"

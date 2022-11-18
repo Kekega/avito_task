@@ -2,7 +2,6 @@ package requests
 
 import (
 	validation "github.com/go-ozzo/ozzo-validation/v4"
-	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
 var notNilUuidRule = validation.NotIn("00000000-0000-0000-0000-000000000000").Error("value cannot be Nil UUID.")
@@ -21,23 +20,20 @@ type GetBalanceRequest struct {
 // Validate validates the GetBalanceRequest fields.
 func (r GetBalanceRequest) Validate() error {
 	return validation.ValidateStruct(&r,
-		validation.Field(&r.OwnerId, validation.Required, is.UUID, notNilUuidRule),
+		validation.Field(&r.OwnerId, validation.Required),
 	)
 }
 
 // AddFundsRequest represents a request to add money to user's balance.
 type AddFundsRequest struct {
 	OwnerId int64 `json:"owner_id"`
-
-	Amount    int64 `json:"amount"`
-	ServiceId int64 `json:"service_id"`
+	Amount  int64 `json:"amount"`
 }
 
 func (r AddFundsRequest) Validate() error {
 	return validation.ValidateStruct(&r,
 		validation.Field(&r.OwnerId, validation.Required),
 		validation.Field(&r.Amount, validation.Required),
-		validation.Field(&r.ServiceId, validation.Required),
 	)
 }
 
@@ -46,7 +42,7 @@ type TransferRequest struct {
 	SenderId    string `json:"sender_id"`
 	RecipientId string `json:"recipient_id"`
 	Amount      int64  `json:"amount"`
-	OrderId     int64 `json:"order_id"`
+	OrderId     int64  `json:"order_id"`
 }
 
 // Validate validates the TransferRequest fields.
@@ -71,7 +67,7 @@ type GetHistoryRequest struct {
 // Validate validates the GetHistoryRequest.
 func (r GetHistoryRequest) Validate() error {
 	return validation.ValidateStruct(&r,
-		validation.Field(&r.OwnerId, validation.Required, is.UUID, notNilUuidRule),
+		validation.Field(&r.OwnerId, validation.Required),
 		validation.Field(&r.Offset, validation.Min(0)),
 		validation.Field(&r.Limit, validation.Min(1)),
 		validation.Field(&r.OrderBy, validation.In("transaction_date", "amount")),
