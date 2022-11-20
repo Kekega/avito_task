@@ -3,7 +3,6 @@ package config
 import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	"time"
 
 	"github.com/qiangxue/go-env"
 	"avito_task/pkg/log"

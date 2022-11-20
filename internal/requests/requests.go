@@ -37,10 +37,10 @@ func (r AddFundsRequest) Validate() error {
 
 // ReserveRequest represents a request to transfer money from one user to another.
 type ReserveRequest struct {
-	SenderId  string `json:"sender_id"`
-	ServiceId string `json:"service_id"`
-	Amount    int64  `json:"amount"`
-	OrderId   int64  `json:"order_id"`
+	SenderId  int64 `json:"sender_id"`
+	ServiceId int64 `json:"service_id"`
+	Amount    int64 `json:"amount"`
+	OrderId   int64 `json:"order_id"`
 }
 
 // Validate validates the ReserveRequest fields.
@@ -52,7 +52,6 @@ func (r ReserveRequest) Validate() error {
 		validation.Field(&r.OrderId, validation.Required),
 	)
 }
-
 
 type ApplyReserveRequest struct {
 	SenderId  string `json:"sender_id"`
@@ -69,7 +68,6 @@ func (r ApplyReserveRequest) Validate() error {
 		validation.Field(&r.OrderId, validation.Required),
 	)
 }
-
 
 // GetHistoryRequest represents a request to get a list of all user's transactions: top-ups, withdrawals and transfers.
 type GetHistoryRequest struct {

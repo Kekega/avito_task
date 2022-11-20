@@ -20,8 +20,8 @@ func RegisterHandlers(
 
 	r.Post("/deposits/balance", res.getBalance)
 	r.Post("/deposits/update", transactionHandler, res.AddFunds)
-	r.Post("/deposits/transfer", transactionHandler, res.transfer)
-	//r.Post("/deposits/history", res.history)
+	//r.Post("/deposits/transfer", transactionHandler, res.transfer)
+	r.Post("/deposits/history", res.history)
 }
 
 type resource struct {
@@ -62,23 +62,23 @@ func (r resource) AddFunds(c *routing.Context) error {
 	return c.Write(tx)
 }
 
-func (r resource) transfer(c *routing.Context) error {
-	var input requests.ReserveRequest
-	if err := c.Read(&input); err != nil {
-		r.logger.With(c.Request.Context()).Info(err)
-		return errors.BadRequest("")
-	}
-
-	err := r.depositService.Transfer(c.Request.Context(), input)
-	if err != nil {
-		return err
-	}
-	tx, err := r.transactionService.CreateTransferTransaction(c.Request.Context(), input)
-	if err != nil {
-		return err
-	}
-	return c.Write(tx)
-}
+//func (r resource) transfer(c *routing.Context) error {
+//	var input requests.ReserveRequest
+//	if err := c.Read(&input); err != nil {
+//		r.logger.With(c.Request.Context()).Info(err)
+//		return errors.BadRequest("")
+//	}
+//
+//	err := r.depositService.Transfer(c.Request.Context(), input)
+//	if err != nil {
+//		return err
+//	}
+//	tx, err := r.transactionService.CreateTransferTransaction(c.Request.Context(), input)
+//	if err != nil {
+//		return err
+//	}
+//	return c.Write(tx)
+//}
 
 func (r resource) history(c *routing.Context) error {
 	var input requests.GetHistoryRequest

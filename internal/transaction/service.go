@@ -66,25 +66,16 @@ func (s service) CreateTransferTransaction(ctx context.Context, req requests.Res
 		return Transaction{}, err
 	}
 
-	senderId, err := strconv.ParseInt(req.SenderId, 10, 64)
-	if err != nil {
-		return Transaction{}, err
-	}
-	recipientId, err := strconv.ParseInt(req.ServiceId, 10, 64)
-	if err != nil {
-		return Transaction{}, err
-	}
-
 	tx := entity.Transaction{
 		Id:              0, // auto-incremented
-		OwnerId:        senderId,
-		ServiceId:     recipientId,
+		OwnerId:        req.SenderId,
+		ServiceId:     req.ServiceId,
 		Amount:          req.Amount,
 		OrderId:     req.OrderId,
 		TransactionDate: time.Now().UTC(),
 	}
 
-	err = s.repo.Create(ctx, &tx)
+	err := s.repo.Create(ctx, &tx)
 	if err != nil {
 		return Transaction{}, err
 	}

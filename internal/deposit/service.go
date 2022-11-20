@@ -60,6 +60,7 @@ func (s service) modifyBalance(ctx context.Context, ownerId int64, amount int64)
 
 // GetBalance returns the balance of the Deposit whose owner whose OwnerId is equal to GetBalanceRequest.OwnerId.
 func (s service) GetBalance(ctx context.Context, req requests.GetBalanceRequest) (float32, error) {
+
 	if err := req.Validate(); err != nil {
 		return 0, err
 	}
